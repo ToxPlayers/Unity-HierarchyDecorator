@@ -26,7 +26,8 @@ namespace HierarchyDecorator
     public class GlobalData
     {
         // Toggles
-
+        public bool enableInPlaymode = true;
+        
         public bool showActiveToggles = true;
 
         [Tooltip("Clicking and dragging over check boxes to toggle them.")]

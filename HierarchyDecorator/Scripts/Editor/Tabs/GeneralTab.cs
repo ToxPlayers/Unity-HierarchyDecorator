@@ -11,7 +11,7 @@ namespace HierarchyDecorator
             // --- General Features
 
             CreateDrawableGroup("Toggles")
-                .RegisterSerializedProperty(serializedTab, "showActiveToggles", "activeSwiping", "swipeSameState", "swipeSelectionOnly", "depthMode"); 
+                .RegisterSerializedProperty(serializedTab, "enableInPlaymode" , "showActiveToggles", "activeSwiping", "swipeSameState", "swipeSelectionOnly", "depthMode"); 
 
             // --- Layers
 

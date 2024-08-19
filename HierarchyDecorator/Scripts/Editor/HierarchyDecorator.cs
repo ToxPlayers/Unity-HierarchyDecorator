@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEditor.SceneManagement;
 using UnityEditor.PackageManager;
+using UnityEngine.Profiling;
 
 namespace HierarchyDecorator
 {
@@ -73,7 +74,7 @@ namespace HierarchyDecorator
         }
 
         private static void OnHierarchyItem(int instanceID, Rect selectionRect)
-        {
+        {  
             if (EditorApplication.isUpdating)
             {
                 return;
@@ -86,6 +87,8 @@ namespace HierarchyDecorator
                 return;
             }
             
+            if( ! Settings.globalData.enableInPlaymode && Application.isPlaying)
+                return;
             // Skip over the instance 
             // - normally if it's a Scene instance rather than a GameObject
 
@@ -96,15 +99,18 @@ namespace HierarchyDecorator
                 return;
             }
 
+            Profiler.BeginSample("HierarchyDecorator.OnHierarchyItem");
+
             HierarchyCache
                 .SetTarget(instance.scene)
-                .SetTarget(instance.transform);
+                .SetTarget(instance.transform); 
 
 #if UNITY_2019_1_OR_NEWER
             selectionRect.height = 16f;
 #endif
 
             // Draw GUI
+
 
             int i = 0;
             for (i = 0; i < Drawers.Length; i++)
@@ -123,6 +129,8 @@ namespace HierarchyDecorator
             }
 
             HierarchyInfo.ResetIndent ();
+
+            Profiler.EndSample();
         }
 
         // Factory Methods
