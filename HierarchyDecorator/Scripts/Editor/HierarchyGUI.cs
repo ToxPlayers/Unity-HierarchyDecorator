@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Profiling;
 
 namespace HierarchyDecorator
 {
@@ -24,26 +25,30 @@ namespace HierarchyDecorator
 
         public static void DrawStandardContent(Rect rect, GameObject instance)
         {
+            Profiler.BeginSample("HierarchyGUI.DrawStandardContent");
             // Get prefab info
 
-            bool isPrefab = PrefabUtility.IsPartOfAnyPrefab(instance);
+            var prefabType = PrefabUtility.GetPrefabAssetType(instance);
+            bool isPrefab = prefabType != PrefabAssetType.NotAPrefab;
             
             GameObject prefabRoot = PrefabUtility.GetNearestPrefabInstanceRoot(instance);
             bool isPrefabParent = prefabRoot == instance;
 
             // Get the content needed for the icon
 
-            GUIContent content = GetStandardContent (rect, instance, isPrefab && isPrefabParent);
+            GUIContent content = GetStandardContent (rect, instance, prefabType, isPrefabParent);
 
             // Handle colours
 
             Color textColour = EditorStyles.label.normal.textColor;
             if (isPrefab)
             {
-                textColour = (EditorGUIUtility.isProSkin) ? DarkModeText : WhiteModeText;
+                if (prefabType == PrefabAssetType.MissingAsset)
+                    textColour = new Color(255, 0.55f, 0.55f);
+                else textColour = (EditorGUIUtility.isProSkin) ? DarkModeText : WhiteModeText;
             }
 
-            if (Selection.Contains(instance))
+            if (Selection.Contains(instance) && prefabType != PrefabAssetType.MissingAsset)
             {
                 textColour = Color.white;
             }
@@ -67,6 +72,8 @@ namespace HierarchyDecorator
             {
                 EditorGUI.LabelField(rect, EditorGUIUtility.IconContent("PrefabOverlayAdded Icon"));
             }
+
+            Profiler.EndSample();
         }
 
         private static void DrawStandardLabel(Rect rect, GUIContent icon, string label, GUIStyle style)
@@ -96,9 +103,20 @@ namespace HierarchyDecorator
 
         // Content Helpers
 
-        public static GUIContent GetStandardContent(Rect rect, GameObject instance, bool isPrefab)
-        {
-            return EditorGUIUtility.IconContent (isPrefab ? "Prefab Icon" : "GameObject Icon");
+        public static GUIContent GetStandardContent(Rect rect, GameObject instance, PrefabAssetType prefabType, bool isPrefabParent)
+        { 
+
+            if (!isPrefabParent || prefabType == PrefabAssetType.NotAPrefab)
+                return EditorGUIUtility.IconContent("GameObject Icon");
+
+            if (prefabType == PrefabAssetType.Model)
+                return EditorGUIUtility.IconContent("PrefabModel Icon");
+
+            if (prefabType == PrefabAssetType.Variant)
+                return EditorGUIUtility.IconContent("PrefabVariant Icon");
+
+
+            return EditorGUIUtility.IconContent("Prefab Icon"); 
         }
 
         public static Color GetTwoToneColour(Rect selectionRect)
