@@ -88,6 +88,11 @@ namespace HierarchyDecorator
 
         public static void OnGUI(int id, Rect rect)
         {
+            if (Application.isPlaying && ! HierarchyDecorator.Settings.globalData.enableInPlaymode)
+            {
+                return;
+            }    
+
             if (EditorApplication.isUpdating)
             {
                 return;

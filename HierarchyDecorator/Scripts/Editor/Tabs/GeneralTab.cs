@@ -1,5 +1,6 @@
 using UnityEditor;
 using UnityEngine;
+using GD = HierarchyDecorator.GlobalData;
 
 namespace HierarchyDecorator
 {
@@ -14,19 +15,20 @@ namespace HierarchyDecorator
             // --- General Features
 
             CreateDrawableGroup("Toggles")
-                .RegisterSerializedProperty(serializedTab, "showActiveToggles", "activeSwiping", "swipeSameState", "swipeSelectionOnly", "depthMode");
+                .RegisterSerializedProperty(serializedTab, nameof(GD.enableInPlaymode), nameof(GD.showActiveToggles), nameof(GD.activeSwiping),
+                nameof(GD.swipeSameState), nameof(GD.swipeSelectionOnly), nameof(GD.depthMode));
 
             // --- Layers
 
             CreateDrawableGroup("Tags & Layers")
                 .RegisterSerializedProperty(serializedTab, TagFields)
                 .RegisterSerializedProperty(serializedTab, LayerFields).Space()
-                .RegisterSerializedProperty(serializedTab, "tagLayerLayout");
+                .RegisterSerializedProperty(serializedTab, nameof(GD.tagLayerLayout));
 
             // --- Breadcrumbs
 
-            SerializedProperty crumbA = serializedTab.FindPropertyRelative("instanceBreadcrumbs");
-            SerializedProperty crumbB = serializedTab.FindPropertyRelative("fullDepthBreadcrumbs");
+            SerializedProperty crumbA = serializedTab.FindPropertyRelative(nameof(GD.instanceBreadcrumbs));
+            SerializedProperty crumbB = serializedTab.FindPropertyRelative(nameof(GD.fullDepthBreadcrumbs));
 
             SerializedProperty[] instanceCrumbs = SerializedPropertyUtility.GetChildProperties(crumbA, "show", "color", "style", "displayHorizontal");
             SerializedProperty[] depthCrumbs = SerializedPropertyUtility.GetChildProperties(crumbB, "show", "color", "style", "displayHorizontal");

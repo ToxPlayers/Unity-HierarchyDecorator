@@ -29,7 +29,9 @@ namespace HierarchyDecorator
     {
         // Toggles
 
-        public bool showActiveToggles = true;
+        public bool enableInPlaymode = true;
+
+        public bool showActiveToggles = true; 
 
         [Tooltip("Clicking and dragging over check boxes to toggle them.")]
         public bool activeSwiping = true;
