@@ -17,7 +17,7 @@ namespace HierarchyDecorator
         [SerializeField] protected string name;
         [SerializeField] protected List<ComponentType> components = new List<ComponentType>();
        
-        private Dictionary<Type, ComponentType> lookup;
+        private Dictionary<Type, ComponentType> lookup = new Dictionary<Type, ComponentType>();
         private bool hasCached = false;
 
         // Properties
