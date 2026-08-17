@@ -1,3 +1,46 @@
+## v0.12.0
+
+### Changes
+
+- Added an optional scene highlight in the hierarchy #116 @emptybraces
+
+### Fixes
+
+- Fixed incorrect scene ID comparison. Now using handles, which should work for Unity 6. #116 @empybraces
+- Removed `Wooshii.HierarchyDecorator` assm to stop `Assembly for Assembly Definition File will not be compiled, because it has no scripts associated with it.` spam. 
+
+## v0.11.2
+
+### Fixes
+- GameObjects named - or ------ would cause index out of bounds exceptions, breaking the hierarchy past that object - #136 @hypevhs 
+
+## v0.11.1
+
+### Changes
+- No longer using `EditorApplication.update` to initialise any data. 
+- An event `HierarchyDecorator.OnSettings` is now called when the settings scriptable is cached.
+
+### Fixes
+- When renaming, deleting or moving assets, HierarchyDecorator now caches component data to avoid data loss.
+
+## v0.11.0 | Community Features & Fixes
+
+### Features
+- Option to change the active toggle type - #122 @emptybraces 
+- Add context menu to ComponentIconInfo - #105 @lekakid
+- Click To Toggle Components - #110 @IndieSeal 
+- Add regex support for prefix - #129 @edunad 
+
+## Fixes
+- Changing a Transform to a RectTransform would result in the loss of a component reference - #121 @emptybraces
+- Fixed Indentation incorrectly shifting when the tag or layer was hidden in horizontal layout - #118 @emptybraces
+- Fixed an inconsistent bug which occurred after opening a project, throwing constant exceptions - #115 @emptybraces
+- Added missing prefab asset colouring - #124 @ToxPlayers
+- Issue #123: Out of Bounds if GameObject only has a prefix and nothing after it - #128 @kaekaes 
+- Issue #126: Safe substring checks added to prefix - #128 @kaekaes 
+
+**Full Changelog**: https://github.com/WooshiiDev/HierarchyDecorator/compare/v0.10.1...v0.11.0
+
 ## v0.10.1
 
  - Removed unnecessary files in the package. 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace HierarchyDecorator
 {
@@ -25,13 +26,51 @@ namespace HierarchyDecorator
     }
 
     [System.Serializable]
+    public abstract class TagLayerSettingsBase
+    {
+        public bool show = true;
+        public TagLayerColorSettings colorSettings;
+    }
+
+    [System.Serializable]
+    public class TagSettings : TagLayerSettingsBase
+    {
+        public bool hideUntagged;
+        public TagSettings()
+        {
+            colorSettings = new TagLayerColorSettings { solidColor = new Color32(143, 239, 255, 255) };
+        }
+    }
+
+    [System.Serializable]
+    public class LayerSettings : TagLayerSettingsBase
+    {
+        public bool applyChildLayers = true;
+        public LayerSettings()
+        {
+            colorSettings = new TagLayerColorSettings { solidColor = new Color32(193, 255, 172, 255) };
+        }
+    }
+    [System.Serializable]
+    public class TagLayerColorSettings
+    {
+        public bool useSolidColor;
+        public bool useRandomColor;
+        public Color solidColor = Color.grey;
+        [Range(0, 1)] public float hue;
+        [Range(0, 1)] public float saturation = 0.5f;
+        [Range(0, 2)] public float brightness = 2f;
+        public static Dictionary<string, Color> s_labelToHashedColorCache;
+    }
+
+    [System.Serializable]
     public class GlobalData
     {
         // Toggles
-
-        public bool enableInPlaymode = true;
-
-        public bool showActiveToggles = true; 
+        public bool enableInPlaymode = true; 
+        public bool showActiveToggles = true;
+        public enum ToggleType {Checkbox, Dot}
+        public ToggleType activeToggleType = ToggleType.Checkbox; 
 
         [Tooltip("Clicking and dragging over check boxes to toggle them.")]
         public bool activeSwiping = true;
@@ -46,11 +85,9 @@ namespace HierarchyDecorator
         public DepthMode depthMode;
 
         // Tags & Layers
-
         public TagLayerLayout tagLayerLayout;
-        public bool showTags = true;
-        public bool showLayers = true;
-        public bool applyChildLayers = true;
+        public TagSettings tagSettings;
+        public LayerSettings layerSettings;
 
         // Components 
 

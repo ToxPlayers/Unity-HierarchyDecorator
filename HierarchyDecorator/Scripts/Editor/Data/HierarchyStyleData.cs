@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 namespace HierarchyDecorator
@@ -26,6 +27,13 @@ namespace HierarchyDecorator
 
             return colorTwo;
         }
+    }
+
+    [System.Serializable]
+    public class SceneItemHighlightSettings
+    {
+        public Color color = new Color32(0x29, 0x29,0x29, 50);
+        [Range(1, 16)] public int lineThickness = 16;
     }
 
     [System.Serializable]
@@ -99,6 +107,12 @@ namespace HierarchyDecorator
         public ColorSetting lightMode = new ColorSetting(new Color(0.8f, 0.8f, 0.8f, 1f), new Color(0.765f, 0.765f, 0.765f, 1f));
         public ColorSetting darkMode = new ColorSetting(new Color(0.245f, 0.245f, 0.245f, 1f), new Color(0.225f, 0.225f, 0.225f, 1f));
 
+        // Scene Item Highlight
+        public bool showSceneItemHighlight = true;
+        public SceneItemHighlightSettings sceneItemHighlight = new SceneItemHighlightSettings();
+
+        // Background 
+
         // --- Methods
 
         // Styles
@@ -168,10 +182,41 @@ namespace HierarchyDecorator
 
         private bool CheckPrefix(string targetPrefix, HierarchyStyle style)
         {
-            if (targetPrefix.StartsWith (style.prefix))
+            if (style.isRegex)
+            {
+                try
+                {
+                    Match match = style.GetRegex().Match(targetPrefix);
+
+                    if (match.Success && match.Groups.Count > 1)
+                    {
+                        style.capturedGroups = new string[match.Groups.Count - 1];
+                        for (int i = 1; i < match.Groups.Count; i++)
+                        {
+                            style.capturedGroups[i - 1] = match.Groups[i].Value;
+                        }
+                        
+                        return true;
+                    }
+                    else
+                    {
+                        style.capturedGroups = null;
+                        return false;
+                    }
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            
+            if (targetPrefix.StartsWith(style.prefix))
             {
                 if (style.noSpaceAfterPrefix)
                     return true;
+
+                if (targetPrefix.Length == style.prefix.Length)
+                    return false; // No point in making an empty row
 
                 if (targetPrefix[style.prefix.Length] == ' ')
                     return true;
