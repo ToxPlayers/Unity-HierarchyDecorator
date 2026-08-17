@@ -219,10 +219,10 @@ namespace HierarchyDecorator
                 components[i].Shown = shown;
             }
         }
-
+         
         private void ValidateCache()
         {
-            if (lookup == null) // Required due to lack of serialization
+            if (lookup == null) // Required due to lack of serialization 
             {
                 lookup = new Dictionary<Type, ComponentType>();
             }
